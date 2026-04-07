@@ -1,0 +1,24 @@
+@model List<ExclusiveMVC.Models.Order>
+
+<h2>Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Total</th>
+        <th>Date</th>
+    </tr>
+
+    @foreach (var o in Model)
+    {
+        <tr>
+            <td>@o.CustomerName</td>
+            <td>@o.Phone</td>
+            <td>@o.Address</td>
+            <td>₹ @o.TotalAmount</td>
+            <td>@o.OrderDate</td>
+        </tr>
+    }
+</table>

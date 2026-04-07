@@ -1,0 +1,24 @@
+﻿@model List<ExclusiveMVC.Models.Product>
+
+<h2>🔥 Exclusive Store</h2>
+
+<div class="row">
+
+@foreach (var item in Model)
+{
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 shadow">
+
+            <img src="@item.ImageUrl" height="200" style="object-fit:contain;" />
+
+            <h5>@item.Name</h5>
+            <p class="text-danger fw-bold">₹ @item.Price</p>
+
+            <a href="/Cart/Add?name=@item.Name&price=@item.Price&image=@item.ImageUrl"
+               class="btn btn-dark">Add to Cart</a>
+
+        </div>
+    </div>
+}
+
+</div>

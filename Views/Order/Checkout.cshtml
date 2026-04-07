@@ -1,0 +1,89 @@
+<h2>🧾 Checkout</h2>
+
+<form asp-action="PlaceOrder" method="post">
+
+    <!-- CUSTOMER DETAILS -->
+    <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="CustomerName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Address</label>
+        <input type="text" name="Address" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="Email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>State</label>
+        <input type="text" name="State" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>City</label>
+        <input type="text" name="City" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Phone</label>
+        <input type="text" name="Phone" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Total Amount</label>
+        <input type="number" name="TotalAmount" class="form-control" required />
+    </div>
+
+    <hr />
+
+    <!-- PAYMENT OPTIONS -->
+    <h4>💳 Payment Method</h4>
+
+    <!-- CARD -->
+    <div class="form-check">
+        <input type="radio" name="PaymentMethod" value="Card" onclick="showPayment('card')" checked />
+        <label>Credit / Debit Card</label>
+    </div>
+
+    <div id="cardSection" class="border p-3 mt-2">
+        <input type="text" class="form-control mb-2" placeholder="Card Number" name="CardNumber" />
+        <input type="text" class="form-control mb-2" placeholder="Expiry Date (MM/YY)" name="Expiry" />
+        <input type="text" class="form-control mb-2" placeholder="CVV" name="CVV" />
+    </div>
+
+    <!-- UPI -->
+    <div class="form-check mt-3">
+        <input type="radio" name="PaymentMethod" value="UPI" onclick="showPayment('upi')" />
+        <label>UPI</label>
+    </div>
+
+    <div id="upiSection" class="border p-3 mt-2 d-none">
+        <input type="text" class="form-control" placeholder="example@upi" name="UPI" />
+    </div>
+
+    <!-- NET BANKING -->
+    <div class="form-check mt-3">
+        <input type="radio" name="PaymentMethod" value="NetBanking" onclick="showPayment('net')" />
+        <label>Net Banking</label>
+    </div>
+
+    <div id="netSection" class="border p-3 mt-2 d-none">
+        <select class="form-control" name="Bank">
+            <option value="">Select Bank</option>
+            <option>SBI</option>
+            <option>HDFC</option>
+            <option>ICICI</option>
+            <option>AXIS</option>
+        </select>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-success">
+        Place Order
+    </button>
+</form>

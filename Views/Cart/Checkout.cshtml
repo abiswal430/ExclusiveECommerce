@@ -1,0 +1,51 @@
+@model List<ExclusiveMVC.Models.Cart>
+
+<h2>💳 Checkout</h2>
+
+<div class="row">
+
+    <!-- LEFT SIDE -->
+    <div class="col-md-6">
+
+        <h4>Billing Details</h4>
+
+        <form method="post" action="/Order/PlaceOrder">
+
+            <input name="FullName" class="form-control mb-2" placeholder="Full Name" required />
+            <input name="Address" class="form-control mb-2" placeholder="Address" required />
+            <input name="State" class="form-control mb-2" placeholder="State" required />
+            <input name="City" class="form-control mb-2" placeholder="City" required />
+            <input name="PinCode" class="form-control mb-2" placeholder="Pin Code" required />
+            <input name="Phone" class="form-control mb-2" placeholder="Phone" required />
+
+            <h5>Payment Method</h5>
+
+            <input type="radio" name="PaymentMethod" value="Card" checked /> Card  
+            <input type="radio" name="PaymentMethod" value="UPI" /> UPI  
+            <input type="radio" name="PaymentMethod" value="NetBanking" /> Net Banking  
+
+            <br /><br />
+
+            <button class="btn btn-dark w-100">Place Order</button>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="col-md-6">
+
+        <h4>Your Order</h4>
+
+        @foreach (var item in Model)
+        {
+            <p>@item.Name - ₹ @item.Price x @item.Quantity</p>
+        }
+
+        <hr />
+
+        <h3>Total: ₹ @Model.Sum(x => x.Price * x.Quantity)</h3>
+
+    </div>
+
+</div>

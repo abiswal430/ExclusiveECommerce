@@ -1,0 +1,24 @@
+@model List<ExclusiveMVC.Models.Product>
+
+<h2>Products</h2>
+
+<a href="/Admin/AddProduct" class="btn btn-success">Add Product</a>
+
+<table class="table mt-3">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.Name</td>
+            <td>₹ @p.Price</td>
+            <td>
+                <a href="/Admin/DeleteProduct/@p.Id" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
