@@ -6,9 +6,6 @@ using System.Linq;
 public class CartController : Controller
 {
     private readonly AppDbContext _context;
-    private static List<Cart> cartItems = new List<Cart>();
-    private static int counter = 1; // ✅ for unique ID
-
 
     public CartController(AppDbContext context)
     {
@@ -70,29 +67,21 @@ public class CartController : Controller
                     Quantity = 1,
                     ImageUrl = "/images/monitor.png"
                 });
+
+                _context.Cart.Add(new Cart
+                {
+                    Name = "Laptop",
+                    Price = 60000,
+                    Quantity = 1,
+                    ImageUrl = "/images/laptop.png"
+                });
         }
 
         _context.SaveChanges();
 
         return RedirectToAction("Index");
     }
-
-    public IActionResult Remove(string name)
-    {
-        var item = _context.Cart.FirstOrDefault(x => x.Name == name);
-
-        if (item != null)
-        {
-            if (item.Quantity > 1)
-                item.Quantity--;
-            else
-                _context.Cart.Remove(item);
-
-            _context.SaveChanges();
-        }
-
-        return RedirectToAction("Index");
-    }
+    
 
     public IActionResult Checkout()
     {
