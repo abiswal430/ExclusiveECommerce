@@ -4,6 +4,8 @@ using ExclusiveMVC.Models;
 
 namespace ExclusiveMVC.Controllers;
 
+// Final UI improvement for submission
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
