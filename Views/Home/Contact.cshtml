@@ -6,9 +6,13 @@
 
 @if (ViewBag.Message != null)
 {
-    <div class="alert alert-success">
-        @ViewBag.Message
-    </div>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '@ViewBag.Message'
+        });
+    </script>
 }
 
 <form method="post" action="/Home/Contact">

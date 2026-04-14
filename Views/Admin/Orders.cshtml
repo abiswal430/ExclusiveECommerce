@@ -1,66 +1,154 @@
 @model List<ExclusiveMVC.Models.Order>
 
-<h2 class="mb-4">📦 My Orders</h2>
+<h2 class="mb-4 fw-bold">📊 Admin - Order Management</h2>
 
-<table class="table table-hover shadow-sm">
-    <thead class="table-dark">
+<div class="table-responsive">
+
+<table class="table table-hover align-middle shadow-sm bg-white">
+
+    <thead class="table-dark text-center">
         <tr>
-            <th>Name</th>
+            <th>#</th>
+            <th>Customer</th>
             <th>Phone</th>
             <th>Address</th>
             <th>Total</th>
+            <th style="min-width:220px;">Tracking</th>
             <th>Date</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
     <tbody>
+        @{
+            int count = 1;
+        }
+
         @foreach (var o in Model)
         {
             <tr>
-                <td>@o.CustomerName</td>
-                <td>@o.Phone</td>
-                <td>@o.Address</td>
-                <td>₹ @o.TotalAmount</td>
-                <td>@o.OrderDate.ToString("dd-MM-yyyy HH:mm")</td>
 
-                <!-- ✅ STATUS -->
+                <!-- SERIAL -->
+                <td class="text-center fw-bold">@count</td>
+
+                <!-- NAME -->
+                <td><strong>@o.CustomerName</strong></td>
+
+                <!-- PHONE -->
+                <td>@o.Phone</td>
+
+                <!-- ADDRESS -->
+                <td style="max-width:200px;">
+                    <small>@o.Address</small>
+                </td>
+
+                <!-- TOTAL -->
+                <td class="fw-bold text-success">
+                    ₹ @o.TotalAmount
+                </td>
+
+                <!-- 🔥 TRACKING -->
                 <td>
+
+                    <!-- PROGRESS BAR -->
+                    <div class="progress" style="height: 8px;">
+
+                        @if (o.Status == "Placed")
+                        {
+                            <div class="progress-bar bg-warning" style="width: 33%"></div>
+                        }
+                        else if (o.Status == "Shipped")
+                        {
+                            <div class="progress-bar bg-info" style="width: 66%"></div>
+                        }
+                        else if (o.Status == "Delivered")
+                        {
+                            <div class="progress-bar bg-success" style="width: 100%"></div>
+                        }
+                        else if (o.Status == "Cancelled")
+                        {
+                            <div class="progress-bar bg-danger" style="width: 100%"></div>
+                        }
+
+                    </div>
+
+                    <!-- STEP LABELS -->
+                    <div class="d-flex justify-content-between small mt-1">
+                        <span class="@(o.Status == "Placed" ? "text-warning fw-bold" : "")">Placed</span>
+                        <span class="@(o.Status == "Shipped" ? "text-info fw-bold" : "")">Shipped</span>
+                        <span class="@(o.Status == "Delivered" ? "text-success fw-bold" : "")">Delivered</span>
+                    </div>
+
+                </td>
+
+                <!-- DATE -->
+                <td>
+                    <small>@o.OrderDate.ToString("dd MMM yyyy")</small><br />
+                    <small class="text-muted">@o.OrderDate.ToString("hh:mm tt")</small>
+                </td>
+
+                <!-- 🔥 ACTIONS -->
+                <td class="text-center">
+
                     @if (o.Status == "Placed")
                     {
-                        <span class="badge bg-primary">Placed</span>
+                        <!-- Ship -->
+                        <a href="/Order/MarkShipped/@o.Id"
+                           class="btn btn-sm btn-info rounded-pill px-3">
+                            Ship
+                        </a>
+
+                        <!-- Cancel -->
+                        <a href="/Order/Cancel/@o.Id"
+                           class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-2">
+                            Cancel
+                        </a>
+                    }
+                    else if (o.Status == "Shipped")
+                    {
+                        <!-- Deliver -->
+                        <a href="/Order/MarkDelivered/@o.Id"
+                           class="btn btn-sm btn-success rounded-pill px-3">
+                            Deliver
+                        </a>
                     }
                     else if (o.Status == "Delivered")
                     {
-                        <span class="badge bg-success">Delivered</span>
-                    }
-                    else if (o.Status == "Cancelled")
-                    {
-                        <span class="badge bg-danger">Cancelled</span>
-                    }
-                </td>
-
-                <!-- ✅ ACTION BUTTONS -->
-                <td>
-                    @if (o.Status == "Placed")
-                    {
-                        <!-- Cancel -->
-                        <a href="/Order/Cancel/@o.Id" class="btn btn-sm btn-danger">
-                            Cancel
-                        </a>
-
-                        <!-- Admin: Mark Delivered -->
-                        <a href="/Order/MarkDelivered/@o.Id" class="btn btn-sm btn-success ms-2">
-                            Delivered
-                        </a>
+                        <span class="text-success fw-semibold">✔ Completed</span>
                     }
                     else
                     {
-                        <span class="text-muted">No Action</span>
+                        <span class="text-danger fw-semibold">✖ Cancelled</span>
                     }
+
                 </td>
+
             </tr>
+
+            count++;
         }
     </tbody>
+
 </table>
+
+</div>
+
+<!-- 🔥 STYLING -->
+<style>
+    table td, table th {
+        vertical-align: middle !important;
+    }
+
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .btn {
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+</style>

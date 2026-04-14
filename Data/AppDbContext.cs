@@ -14,6 +14,7 @@ namespace ExclusiveMVC.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Cart> Cart { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,20 +25,25 @@ namespace ExclusiveMVC.Data
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
 
-            // ✅ PRODUCT DISCOUNT (FIXED)
+            // ✅ PRODUCT DISCOUNT
             modelBuilder.Entity<Product>()
                 .Property(p => p.Discount)
                 .HasPrecision(18, 2);
 
-            // ✅ CART PRICE (FIXED)
+            // ✅ CART PRICE
             modelBuilder.Entity<Cart>()
                 .Property(c => c.Price)
                 .HasPrecision(18, 2);
 
             // ✅ ORDER TOTAL
-            modelBuilder.Entity<Cart>()
-            .Property(c => c.Price)
-            .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+
+            // 🔥 FIX: ORDER ITEM PRICE (VERY IMPORTANT)
+            modelBuilder.Entity<OrderItem>()
+                .Property(o => o.Price)
+                .HasPrecision(18, 2);
         }
     }
 }

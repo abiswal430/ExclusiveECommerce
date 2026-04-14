@@ -1,0 +1,87 @@
+@model List<ExclusiveMVC.Models.Order>
+
+<h2 class="mb-4 fw-bold">📊 Admin Dashboard</h2>
+
+<!-- 🔥 STATS CARDS -->
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center p-3 border-0">
+            <h6 class="text-muted">Total Orders</h6>
+            <h3 class="text-primary">@Model.Count</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center p-3 border-0">
+            <h6 class="text-muted">Total Revenue</h6>
+            <h3 class="text-success">₹ @Model.Sum(x => x.TotalAmount)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center p-3 border-0">
+            <h6 class="text-muted">Delivered</h6>
+            <h3 class="text-success">@Model.Count(x => x.Status == "Delivered")</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center p-3 border-0">
+            <h6 class="text-muted">Cancelled</h6>
+            <h3 class="text-danger">@Model.Count(x => x.Status == "Cancelled")</h3>
+        </div>
+    </div>
+
+</div>
+
+<hr />
+
+<!-- 🔥 CHART SECTION -->
+<h4 class="mb-3">📈 Order Analytics</h4>
+
+<div class="card shadow-sm p-4 border-0">
+    <canvas id="orderChart" height="120"></canvas>
+</div>
+
+<!-- 🔥 CHART SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('orderChart').getContext('2d');
+
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Placed', 'Delivered', 'Cancelled'],
+            datasets: [{
+                data: [
+                    @Model.Count(x => x.Status == "Placed"),
+                    @Model.Count(x => x.Status == "Delivered"),
+                    @Model.Count(x => x.Status == "Cancelled")
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+<!-- 🔥 OPTIONAL STYLING -->
+<style>
+    .card {
+        border-radius: 15px;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+</style>

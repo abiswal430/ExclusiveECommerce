@@ -21,51 +21,63 @@ namespace ExclusiveMVC.Controllers
             return View(cartItems);
         }
 
-        // ✅ PLACE ORDER (UPDATED WITH FULL ADDRESS)
+        // ✅ PLACE ORDER
         [HttpPost]
         public IActionResult PlaceOrder(string name, string phone, string address,
                                        string state, string city, string pincode)
         {
-            var cartItems = _context.Cart.ToList();
-
-            // 🚫 Prevent empty order
-            if (!cartItems.Any())
-                return RedirectToAction("Index", "Cart");
-
-            // ✅ Calculate total
-            decimal total = cartItems.Sum(x => x.Price * x.Quantity);
-
-            // ✅ Combine full address
-            string fullAddress = $"{address}, {city}, {state} - {pincode}";
-
-            // ✅ Save order
-            var order = new Order
+            try
             {
-                CustomerName = name,
-                Phone = phone,
-                Address = fullAddress,
-                TotalAmount = total,
-                Status = "Placed", // 🔥 important for tracking
-                OrderDate = DateTime.Now
-            };
+                var cartItems = _context.Cart.ToList();
 
-            _context.Orders.Add(order);
+                if (!cartItems.Any())
+                {
+                    TempData["error"] = "Cart is empty!";
+                    return RedirectToAction("Index", "Cart");
+                }
 
-            // 🧹 Clear cart
-            _context.Cart.RemoveRange(cartItems);
+                decimal total = cartItems.Sum(x => x.Price * x.Quantity);
 
-            _context.SaveChanges();
+                string fullAddress = $"{address}, {city}, {state} - {pincode}";
 
-            // 🔴 Reset cart count
-            HttpContext.Session.SetInt32("CartCount", 0);
+                var order = new Order
+                {
+                    CustomerName = name,
+                    Phone = phone,
+                    Address = fullAddress,
+                    TotalAmount = total,
+                    Status = "Placed",
+                    OrderDate = DateTime.Now,
+                    Items = new List<OrderItem>()
+                };
 
-            return RedirectToAction("Success");
-        }
+                foreach (var item in cartItems)
+                {
+                    order.Items.Add(new OrderItem
+                    {
+                        ProductName = item.Name,
+                        Price = item.Price,
+                        Quantity = item.Quantity
+                    });
+                }
 
-        // ✅ SUCCESS PAGE
-        public IActionResult Success()
-        {
-            return View();
+                _context.Orders.Add(order);
+
+                _context.Cart.RemoveRange(cartItems);
+
+                _context.SaveChanges();
+
+                HttpContext.Session.SetInt32("CartCount", 0);
+
+                TempData["success"] = "Order placed successfully!";
+
+                return RedirectToAction("History");
+            }
+            catch (Exception)
+            {
+                TempData["error"] = "Something went wrong!";
+                return RedirectToAction("Checkout");
+            }
         }
 
         // ✅ ORDER HISTORY
@@ -87,20 +99,52 @@ namespace ExclusiveMVC.Controllers
             {
                 order.Status = "Cancelled";
                 _context.SaveChanges();
+
+                TempData["success"] = "Order cancelled!";
+            }
+            else
+            {
+                TempData["error"] = "Cannot cancel this order!";
             }
 
             return RedirectToAction("History");
         }
 
-        // 🚚 MARK AS DELIVERED (Admin Feature)
+        // 🚚 MARK AS SHIPPED (NEW 🔥)
+        public IActionResult MarkShipped(int id)
+        {
+            var order = _context.Orders.FirstOrDefault(x => x.Id == id);
+
+            if (order != null && order.Status == "Placed")
+            {
+                order.Status = "Shipped";
+                _context.SaveChanges();
+
+                TempData["success"] = "Order shipped!";
+            }
+            else
+            {
+                TempData["error"] = "Cannot ship this order!";
+            }
+
+            return RedirectToAction("History");
+        }
+
+        // 🚚 MARK AS DELIVERED
         public IActionResult MarkDelivered(int id)
         {
             var order = _context.Orders.FirstOrDefault(x => x.Id == id);
 
-            if (order != null)
+            if (order != null && order.Status == "Shipped")
             {
                 order.Status = "Delivered";
                 _context.SaveChanges();
+
+                TempData["success"] = "Order delivered!";
+            }
+            else
+            {
+                TempData["error"] = "Order must be shipped first!";
             }
 
             return RedirectToAction("History");

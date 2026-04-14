@@ -1,0 +1,21 @@
+@model List<ExclusiveMVC.Models.ApiProduct>
+
+<h2>🌐 API Products</h2>
+
+<div class="row">
+
+@foreach (var item in Model)
+{
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 shadow">
+
+            <img src="@item.image" height="200" style="object-fit:contain;" />
+
+            <h5>@item.title</h5>
+            <p class="text-danger fw-bold">₹ @item.price</p>
+
+        </div>
+    </div>
+}
+
+</div>

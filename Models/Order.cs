@@ -1,19 +1,22 @@
-using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExclusiveMVC.Models
 {
     public class Order
     {
- public int Id { get; set; }
+        public int Id { get; set; }
 
-        public string CustomerName { get; set; } = "";
-        public string Address { get; set; } = "";
-        public string Phone { get; set; } = "";
+        public string? CustomerName { get; set; }   // ✅ FIX
+        public string? Phone { get; set; }          // ✅ FIX
+        public string? Address { get; set; }        // ✅ FIX
 
         public decimal TotalAmount { get; set; }
 
-        public string Status { get; set; } = "Placed";
+        public string? Status { get; set; }         // ✅ FIX
 
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; }
+
+        // ✅ RELATION
+        public List<OrderItem>? Items { get; set; }
     }
 }

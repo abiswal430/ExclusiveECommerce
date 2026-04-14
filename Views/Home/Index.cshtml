@@ -1,35 +1,75 @@
 ﻿@model List<ExclusiveMVC.Models.Product>
 
-<h2 class="mb-4">🔥 Exclusive Store</h2>
+<h2 class="mb-4 fw-bold text-center">🔥 Exclusive Store</h2>
 
 <div class="row">
 
 @foreach (var item in Model)
 {
-    <div class="col-md-4 mb-4">
-        <div class="card p-3 shadow h-100 text-center">
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
 
-            <!-- PRODUCT IMAGE -->
-            <img src="@item.ImageUrl" height="200" style="object-fit:contain;" class="mb-3" />
+        <div class="card product-card h-100 border-0 shadow-sm">
 
-            <!-- PRODUCT NAME -->
-            <h5 class="fw-semibold">@item.Name</h5>
+            <!-- IMAGE -->
+            <div class="text-center p-3">
+                <img src="@item.ImageUrl" class="img-fluid product-img" />
+            </div>
 
-            <!-- PRICE -->
-            <p class="text-danger fw-bold">₹ @item.Price</p>
+            <!-- BODY -->
+            <div class="card-body text-center">
 
-            <!-- ✅ UPDATED ADD TO CART BUTTON -->
-            <a asp-controller="Cart"
-               asp-action="Add"
-               asp-route-name="@item.Name"
-               asp-route-price="@item.Price"
-               asp-route-image="@item.ImageUrl"
-               class="btn btn-dark w-100">
-                Add to Cart
-            </a>
+                <h5 class="fw-semibold">@item.Name</h5>
 
+                <p class="text-danger fw-bold fs-5">₹ @item.Price</p>
+
+                <!-- BUTTON -->
+                <a asp-controller="Cart"
+                   asp-action="Add"
+                   asp-route-name="@item.Name"
+                   asp-route-price="@item.Price"
+                   asp-route-image="@item.ImageUrl"
+                   class="btn btn-dark w-100 add-btn">
+                    Add to Cart
+                </a>
+
+            </div>
         </div>
+
     </div>
 }
 
 </div>
+
+<!-- 🔥 CUSTOM CSS -->
+<style>
+    .product-card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .product-img {
+        height: 200px;
+        object-fit: contain;
+        transition: transform 0.3s;
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.05);
+    }
+
+    .add-btn {
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    .add-btn:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+</style>
