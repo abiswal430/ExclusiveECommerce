@@ -1,10 +1,35 @@
-<h2>Register</h2>
+@{
+    ViewData["Title"] = "Register";
+}
 
-<form method="post">
-    <input name="Username" placeholder="Username" required />
-    <input name="Password" type="password" placeholder="Password" required />
+<div class="d-flex justify-content-center align-items-center" style="height:70vh;">
 
-    <button type="submit">Register</button>
-</form>
+    <div class="card shadow p-4" style="width:350px;">
 
-<a href="/Account/Login">Already have account? Login</a>
+        <h3 class="text-center mb-3">Register</h3>
+
+        <form method="post">
+
+            <div class="mb-3">
+                <input name="Username" class="form-control" placeholder="Username" required />
+            </div>
+
+            <div class="mb-3">
+                <input name="Password" type="password" class="form-control" placeholder="Password" required />
+            </div>
+
+            <button type="submit" class="btn w-100 py-2"
+            style="background:#0d6efd; color:white; border-radius:8px; font-weight:600;">
+            Register
+            </button>
+
+
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="/Account/Login">Already have account? Login</a>
+        </div>
+
+    </div>
+
+</div>

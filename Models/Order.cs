@@ -12,6 +12,8 @@ namespace ExclusiveMVC.Models
 
         public decimal TotalAmount { get; set; }
 
+        public string Status { get; set; } = "Placed";
+
         public DateTime OrderDate { get; set; } = DateTime.Now;
     }
 }

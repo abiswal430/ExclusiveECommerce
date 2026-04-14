@@ -12,6 +12,24 @@ public class CartController : Controller
         _context = context;
     }
 
+    // ❌ REMOVE ITEM FROM CART
+    public IActionResult Remove(string name)
+    {
+    var item = _context.Cart.FirstOrDefault(x => x.Name == name);
+
+    if (item != null)
+    {
+        _context.Cart.Remove(item);
+        _context.SaveChanges();
+    }
+
+    // 🔥 UPDATE COUNT AGAIN
+    int count = _context.Cart.Sum(x => x.Quantity);
+    HttpContext.Session.SetInt32("CartCount", count);
+
+    return RedirectToAction("Index");
+    }
+
     public IActionResult Index()
     {
         var items = _context.Cart.ToList();
@@ -20,68 +38,31 @@ public class CartController : Controller
 
     public IActionResult Add(string name, decimal price, string image)
     {
-        var item = _context.Cart.FirstOrDefault(x => x.Name == name);
+    var item = _context.Cart.FirstOrDefault(x => x.Name == name);
 
-        if (item != null)
-        {
-            item.Quantity++;
-        }
-        else
-        {
-            _context.Cart.Add(new Cart
-            {
-                Name = "iPhone 14",
-                Price = 80000,
-                Quantity = 1,
-                ImageUrl = "/images/iphone14.png"
-            });
-
-            _context.Cart.Add(new Cart
-            {
-                Name = "Gamepad",
-                Price = 2000,
-                Quantity = 1,
-                ImageUrl = "/images/gamepad.png"
-            });
-
-            _context.Cart.Add(new Cart
-            {
-                Name = "Headphones",
-                Price = 3000,
-                Quantity = 1,
-                ImageUrl = "/images/headphone.png"
-            });
-
-                _context.Cart.Add(new Cart
-                {
-                    Name = "Keyboard",
-                    Price = 1900,
-                    Quantity = 1,
-                    ImageUrl = "/images/keyboard.png"
-                });
-    
-                _context.Cart.Add(new Cart
-                {
-                    Name = "Monitor",
-                    Price = 37000,
-                    Quantity = 1,
-                    ImageUrl = "/images/monitor.png"
-                });
-
-                _context.Cart.Add(new Cart
-                {
-                    Name = "Laptop",
-                    Price = 60000,
-                    Quantity = 1,
-                    ImageUrl = "/images/laptop.png"
-                });
-        }
-
-        _context.SaveChanges();
-
-        return RedirectToAction("Index");
+    if (item != null)
+    {
+        item.Quantity++;
     }
-    
+    else
+    {
+        _context.Cart.Add(new Cart
+        {
+            Name = name,
+            Price = price,
+            Quantity = 1,
+            ImageUrl = image
+        });
+    }
+
+    _context.SaveChanges();
+
+    // 🔥 UPDATE CART COUNT IN SESSION
+    int count = _context.Cart.Sum(x => x.Quantity);
+    HttpContext.Session.SetInt32("CartCount", count);
+
+    return RedirectToAction("Index", "Home");
+    }
 
     public IActionResult Checkout()
     {

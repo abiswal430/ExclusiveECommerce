@@ -1,21 +1,32 @@
 ﻿@model List<ExclusiveMVC.Models.Product>
 
-<h2>🔥 Exclusive Store</h2>
+<h2 class="mb-4">🔥 Exclusive Store</h2>
 
 <div class="row">
 
 @foreach (var item in Model)
 {
     <div class="col-md-4 mb-4">
-        <div class="card p-3 shadow">
+        <div class="card p-3 shadow h-100 text-center">
 
-            <img src="@item.ImageUrl" height="200" style="object-fit:contain;" />
+            <!-- PRODUCT IMAGE -->
+            <img src="@item.ImageUrl" height="200" style="object-fit:contain;" class="mb-3" />
 
-            <h5>@item.Name</h5>
+            <!-- PRODUCT NAME -->
+            <h5 class="fw-semibold">@item.Name</h5>
+
+            <!-- PRICE -->
             <p class="text-danger fw-bold">₹ @item.Price</p>
 
-            <a href="/Cart/Add?name=@item.Name&price=@item.Price&image=@item.ImageUrl"
-               class="btn btn-dark">Add to Cart</a>
+            <!-- ✅ UPDATED ADD TO CART BUTTON -->
+            <a asp-controller="Cart"
+               asp-action="Add"
+               asp-route-name="@item.Name"
+               asp-route-price="@item.Price"
+               asp-route-image="@item.ImageUrl"
+               class="btn btn-dark w-100">
+                Add to Cart
+            </a>
 
         </div>
     </div>

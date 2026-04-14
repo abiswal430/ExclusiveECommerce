@@ -8,9 +8,11 @@ namespace ExclusiveMVC.Models
         public decimal Price { get; set; }
 
         public string? ImageUrl { get; set; }
+        
         public string? Category { get; set; }
 
         public bool IsFlashSale { get; set; }
-        public int Discount { get; set; }
+
+        public decimal Discount { get; set; }
     }
 }

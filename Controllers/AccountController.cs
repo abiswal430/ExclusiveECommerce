@@ -22,13 +22,13 @@ namespace ExclusiveMVC.Controllers
         }
 
         [HttpPost]
-public IActionResult Register(User user)
-{
-    _context.Users.Add(user);
-    _context.SaveChanges();
+        public IActionResult Register(User user)
+        {
+          _context.Users.Add(user);
+          _context.SaveChanges();
 
-    return RedirectToAction("Index", "Home");
-}
+          return RedirectToAction("Login", "Account");
+        }
 
         // LOGIN PAGE
         public IActionResult Login()

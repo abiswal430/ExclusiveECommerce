@@ -43,52 +43,57 @@
             <!-- RIGHT SIDE -->
             <ul class="navbar-nav align-items-center ms-auto">
 
-    <!-- ADMIN -->
-    <li class="nav-item me-3">
-        <a class="nav-link text-dark fw-semibold" href="/Admin">
-            ⚙️ Admin
-        </a>
-    </li>
+                <!-- ADMIN -->
+                <li class="nav-item me-3">
+                    <a class="nav-link text-dark fw-semibold" href="/Admin">
+                        ⚙️ Admin
+                    </a>
+                </li>
 
-    <!-- CART -->
-    <li class="nav-item me-3">
-        <a class="nav-link" href="/Cart">
-            🛒 Cart
-        </a>
-    </li>
+                <!-- 🛒 CART WITH COUNT -->
+                <li class="nav-item me-3">
+                    <a class="nav-link position-relative" href="/Cart">
+                        🛒 Cart
 
-    @if (Context.Session.GetString("username") != null)
-    {
-        <!-- USERNAME -->
-        <li class="nav-item me-2">
-            <span class="nav-link text-primary fw-bold">
-                @Context.Session.GetString("username")
-            </span>
-        </li>
+                        <!-- 🔴 BADGE -->
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @(Context.Session.GetInt32("CartCount") ?? 0)
+                        </span>
+                    </a>
+                </li>
 
-        <!-- LOGOUT -->
-        <li class="nav-item">
-            <a class="nav-link text-danger" href="/Account/Logout">Logout</a>
-        </li>
-    }
-    else
-    {
-        <!-- LOGIN -->
-        <li class="nav-item me-2">
-            <a class="nav-link btn btn-outline-dark px-3" href="/Account/Login">
-                Login
-            </a>
-        </li>
+                @if (Context.Session.GetString("username") != null)
+                {
+                    <!-- USERNAME -->
+                    <li class="nav-item me-2">
+                        <span class="nav-link text-primary fw-bold">
+                            @Context.Session.GetString("username")
+                        </span>
+                    </li>
 
-        <!-- REGISTER -->
-        <li class="nav-item">
-            <a class="nav-link btn btn-dark text-white px-3" href="/Account/Register">
-                Register
-            </a>
-        </li>
-    }
+                    <!-- LOGOUT -->
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-semibold" href="/Account/Logout">
+                            Logout
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <!-- LOGIN -->
+                    <li class="nav-item me-2">
+                        <a class="btn btn-primary px-4 py-2 rounded-pill shadow-sm me-2" href="/Account/Login">
+                            Login
+                        </a>
+                    </li>
 
-</ul>
+                    <!-- REGISTER (FIXED COLOR) -->
+                    <li class="nav-item">
+                        <a class="btn btn-primary px-4 py-2 rounded-pill shadow-sm" href="/Account/Register">
+                            Register
+                        </a>
+                    </li>
+                }
 
             </ul>
 

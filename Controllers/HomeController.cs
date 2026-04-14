@@ -22,7 +22,8 @@ public class HomeController : Controller
         new Product { Name="Headphones", Price=3000, ImageUrl="/images/headphone.png" },
         new Product { Name="Gamepad", Price=1800, ImageUrl="/images/gamepad.png" },
         new Product { Name="Keyboard", Price=1900, ImageUrl="/images/keyboard.png" },
-        new Product { Name="Monitor", Price=37000, ImageUrl="/images/monitor.png" }
+        new Product { Name="Monitor", Price=37000, ImageUrl="/images/monitor.png" },
+        new Product{ Name="CPU Cooler", Price=5500, ImageUrl="/images/cooler.png" },
     };
 
     return View(products);
