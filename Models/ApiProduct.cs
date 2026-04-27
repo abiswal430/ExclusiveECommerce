@@ -3,9 +3,8 @@ namespace ExclusiveMVC.Models
     public class ApiProduct
     {
         public int id { get; set; }
-
-        public string? title { get; set; }   // ✅ FIX
+        public string? title { get; set; }
         public decimal price { get; set; }
-        public string? image { get; set; }   // ✅ FIX
+        public string? image { get; set; }
     }
 }

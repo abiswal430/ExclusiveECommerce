@@ -18,7 +18,9 @@ namespace ExclusiveMVC.Controllers
             var response = await _httpClient.GetAsync("https://fakestoreapi.com/products");
 
             if (!response.IsSuccessStatusCode)
+            {
                 return View(new List<ApiProduct>());
+            }
 
             var json = await response.Content.ReadAsStringAsync();
 

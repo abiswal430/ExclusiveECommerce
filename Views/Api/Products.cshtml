@@ -1,21 +1,87 @@
 @model List<ExclusiveMVC.Models.ApiProduct>
 
-<h2>🌐 API Products</h2>
+<h2 class="mb-4 fw-bold text-center">🌐 API Products</h2>
 
-<div class="row">
+<!-- 🔍 SEARCH BOX -->
+<div class="mb-4 text-center">
+    <input type="text" id="searchBox" class="form-control w-50 mx-auto"
+           placeholder="Search products..." onkeyup="filterProducts()" />
+</div>
+
+<!-- 🔄 LOADING SPINNER -->
+<div id="loader" class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Loading products...</p>
+</div>
+
+<!-- 🛍️ PRODUCTS -->
+<div class="row" id="productContainer" style="display:none;">
 
 @foreach (var item in Model)
 {
-    <div class="col-md-4 mb-4">
-        <div class="card p-3 shadow">
+    <div class="col-md-4 mb-4 product-card">
+
+        <div class="card p-3 shadow-sm text-center">
 
             <img src="@item.image" height="200" style="object-fit:contain;" />
 
-            <h5>@item.title</h5>
-            <p class="text-danger fw-bold">₹ @item.price</p>
+            <h6 class="mt-2 product-title">@item.title</h6>
+
+            <!-- 💰 USD → INR -->
+            <p class="text-danger fw-bold">
+                ₹ @(item.price * 83)
+            </p>
 
         </div>
+
     </div>
 }
 
 </div>
+
+<!-- 🔥 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // ⏳ Show loader first
+    window.onload = function () {
+        setTimeout(function () {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("productContainer").style.display = "flex";
+        }, 1000);
+    };
+
+    // 🔍 SEARCH FILTER
+    function filterProducts() {
+        let input = document.getElementById("searchBox").value.toLowerCase();
+        let cards = document.getElementsByClassName("product-card");
+
+        for (let i = 0; i < cards.length; i++) {
+            let title = cards[i].querySelector(".product-title").innerText.toLowerCase();
+
+            if (title.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+<!-- 🎨 STYLE -->
+<style>
+    .card {
+        border-radius: 12px;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    #searchBox {
+        border-radius: 25px;
+        padding: 10px;
+    }
+</style>

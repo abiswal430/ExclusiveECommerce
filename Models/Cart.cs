@@ -10,6 +10,8 @@ namespace ExclusiveMVC.Models
 
         public int Quantity { get; set; }
 
+        public bool IsSaved { get; set; } = false;
+
         public string ImageUrl { get; set; } = "";
     }
 }

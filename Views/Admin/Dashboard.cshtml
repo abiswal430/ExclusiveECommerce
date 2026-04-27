@@ -1,8 +1,6 @@
 @model List<ExclusiveMVC.Models.Order>
 
-<h2 class="mb-4 fw-bold">📊 Admin Dashboard (Updated)</h2>
-
-<!-- Final polish -->
+<h2 class="mb-4 fw-bold">📊 Admin Dashboard</h2>
 
 <!-- 🔥 STATS CARDS -->
 <div class="row mb-4">
@@ -40,7 +38,7 @@
 <hr />
 
 <!-- 🔥 CHART SECTION -->
-<h4 class="mb-3">📈 Order Analytics</h4>
+<h4 class="mb-3 text-center">📈 Order Analytics</h4>
 
 <div class="card shadow-sm p-4 border-0">
     <canvas id="orderChart" height="120"></canvas>
@@ -50,9 +48,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    var ctx = document.getElementById('orderChart').getContext('2d');
+    const ctx = document.getElementById('orderChart').getContext('2d');
 
-    var chart = new Chart(ctx, {
+    const orderChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Placed', 'Delivered', 'Cancelled'],
@@ -61,21 +59,36 @@
                     @Model.Count(x => x.Status == "Placed"),
                     @Model.Count(x => x.Status == "Delivered"),
                     @Model.Count(x => x.Status == "Cancelled")
-                ]
+                ],
+                backgroundColor: [
+                    '#ffc107',  // yellow (Placed)
+                    '#28a745',  // green (Delivered)
+                    '#dc3545'   // red (Cancelled)
+                ],
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
+            cutout: '60%', // donut thickness
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true
                 }
             }
         }
     });
 </script>
 
-<!-- 🔥 OPTIONAL STYLING -->
+<!-- 🔥 STYLING -->
 <style>
     .card {
         border-radius: 15px;
@@ -85,5 +98,9 @@
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        text-align: center;
     }
 </style>

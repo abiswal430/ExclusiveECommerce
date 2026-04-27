@@ -121,6 +121,12 @@
     <div class="container mt-4">
         @RenderBody()
     </div>
+    @if (TempData["success"] != null)
+    {
+    <div class="alert alert-success text-center">
+        @TempData["success"]
+    </div>
+    }
 
     <!-- 🔥 FOOTER -->
     <footer class="text-center mt-5 border-top pt-3 text-muted">
