@@ -24,7 +24,7 @@ namespace ExclusiveMVC.Controllers
         // ✅ PLACE ORDER (FINAL FIXED VERSION)
         [HttpPost]
         public IActionResult PlaceOrder(string name, string phone, string address,
-                                       string state, string city, string pincode)
+                                       string state, string city, string pincode, string paymentMethod)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace ExclusiveMVC.Controllers
                     Phone = phone,
                     Address = $"{address}, {city}, {state} - {pincode}",
                     TotalAmount = total,
-                    Status = "Placed",
+                    Status = paymentMethod == "COD" ? "Order Placed (COD)" : "Paid",
                     OrderDate = DateTime.Now,
                     Items = new List<OrderItem>()
                 };
