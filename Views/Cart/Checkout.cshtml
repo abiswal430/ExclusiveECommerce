@@ -72,7 +72,18 @@
             <option>HDFC</option>
             <option>ICICI</option>
             <option>AXIS</option>
+            <option>KOTAK</option>
         </select>
+    </div>
+
+    <!-- ✅ NEW: CASH ON DELIVERY -->
+        <div class="form-check mt-3">
+        <input type="radio" name="paymentMethod" value="COD" onclick="showPayment('cod')" />
+        <label>Cash On Delivery</label>
+    </div>
+
+    <div id="codSection" class="border p-3 mt-2" style="display:none;">
+        <p class="text-success">💰 Pay with cash when your order is delivered.</p>
     </div>
 
     <br />
@@ -100,9 +111,10 @@ function showPayment(type) {
     document.getElementById("cardSection").style.display = "none";
     document.getElementById("upiSection").style.display = "none";
     document.getElementById("netSection").style.display = "none";
-
+    document.getElementById("codSection").style.display = "none";
     if (type === "card") document.getElementById("cardSection").style.display = "block";
     if (type === "upi") document.getElementById("upiSection").style.display = "block";
     if (type === "net") document.getElementById("netSection").style.display = "block";
+    if (type === "cod") document.getElementById("codSection").style.display = "block";
 }
 </script>

@@ -6,7 +6,7 @@ namespace ExclusiveMVC.Models
     {
         public int Id { get; set; }
 
-        public string? CustomerName { get; set; }   // ✅ FIX
+        public string? Name { get; set; }   // ✅ FIX
         public string? Phone { get; set; }          // ✅ FIX
         public string? Address { get; set; }        // ✅ FIX
 

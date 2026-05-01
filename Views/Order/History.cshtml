@@ -1,27 +1,139 @@
 @model List<ExclusiveMVC.Models.Order>
 
-<h2>My Orders</h2>
+<h2 class="mb-4">📦 My Orders</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Total</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.CustomerName</td>
-                <td>@item.Phone</td>
-                <td>@item.Address</td>
-                <td>₹ @item.TotalAmount</td>
-                <td>@item.OrderDate</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- ✅ SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["success"] != null)
+{
+    <script>
+        Swal.fire("Success", "@TempData["success"]", "success");
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <script>
+        Swal.fire("Error", "@TempData["error"]", "error");
+    </script>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No orders found.</div>
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        <div class="card mb-3 p-3 shadow-sm">
+
+            <div class="row">
+
+                <!-- LEFT SIDE -->
+                <div class="col-md-8">
+                    <h5 class="mb-2">@order.Name</h5>
+
+                    <p class="mb-1"><b>📞 Phone:</b> @order.Phone</p>
+                    <p class="mb-1"><b>📍 Address:</b> @order.Address</p>
+
+                    <p class="mb-1">
+                        <b>📅 Date:</b> @order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")
+                    </p>
+
+                    <h6 class="text-success mt-2">
+                        ₹ @order.TotalAmount
+                    </h6>
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="col-md-4 text-end">
+
+                    @{
+    string badgeClass = "bg-secondary";
+    string displayText = order.Status ?? "Unknown";
+
+    if (!string.IsNullOrEmpty(order.Status) && order.Status.Contains("COD"))
+    {
+        badgeClass = "bg-warning text-dark";
+        displayText = "💰 Cash On Delivery";
+    }
+    else if (order.Status == "Paid")
+    {
+        badgeClass = "bg-success";
+        displayText = "💳 Paid";
+    }
+    else if (order.Status == "Placed")
+    {
+        badgeClass = "bg-primary";
+    }
+    else if (order.Status == "Shipped")
+    {
+        badgeClass = "bg-info";
+    }
+    else if (order.Status == "Delivered")
+    {
+        badgeClass = "bg-success";
+    }
+    else if (order.Status == "Cancelled")
+    {
+        badgeClass = "bg-danger";
+    }
+}
+
+                    <!-- ✅ STATUS BADGE -->
+                    <span class="badge @badgeClass mb-2">
+                        @displayText
+                    </span>
+
+                    <br />
+
+                    <!-- ACTION BUTTONS -->
+                    <a href="/Order/Invoice/@order.Id" class="btn btn-info btn-sm mb-1">
+                        🧾 Invoice
+                    </a>
+
+                    @if (order.Status == "Placed" || order.Status?.Contains("COD") == true)
+                    {
+                        <a href="/Order/Cancel/@order.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Cancel this order?')">
+                            ❌ Cancel
+                        </a>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+}
+
+<!-- 🎨 STYLE -->
+<style>
+.card {
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.badge {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+h2 {
+    color: #2874f0;
+    font-weight: bold;
+}
+</style>

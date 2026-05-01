@@ -31,7 +31,7 @@ namespace ExclusiveMVC.Controllers
         }
 
         // ➕ ADD TO CART
-        public IActionResult Add(string name, decimal price, string image)
+        public IActionResult Add(string name, decimal price, string image, int qty = 1)
         {
             if (string.IsNullOrEmpty(name))
                 return RedirectToAction("Index", "Home");
@@ -41,7 +41,7 @@ namespace ExclusiveMVC.Controllers
 
             if (item != null)
             {
-                item.Quantity++;
+                item.Quantity += qty;
             }
             else
             {
@@ -49,7 +49,7 @@ namespace ExclusiveMVC.Controllers
                 {
                     Name = name,
                     Price = price,
-                    Quantity = 1,
+                    Quantity = qty,
                     ImageUrl = image ?? "",
                     IsSaved = false
                 });
@@ -173,6 +173,44 @@ namespace ExclusiveMVC.Controllers
             UpdateCartCount();
             return RedirectToAction("Index");
         }
+
+        public IActionResult AddFromApi(string name, decimal price, string image, int qty = 1)
+    {
+    try
+    {
+        var item = _context.Cart.FirstOrDefault(x => x.Name == name && !x.IsSaved);
+
+        if (item != null)
+        {
+            item.Quantity += qty;
+        }
+        else
+        {
+            _context.Cart.Add(new Cart
+            {
+                Name = name,
+                Price = price,
+                Quantity = qty,
+                ImageUrl = image,
+                IsSaved = false
+            });
+        }
+
+        _context.SaveChanges();
+
+        UpdateCartCount();
+
+        TempData["success"] = "Added to cart!";
+
+        return RedirectToAction("Index");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        TempData["error"] = "Failed to add product!";
+        return RedirectToAction("Products", "Api");
+    }
+}
 
         // 🧾 CHECKOUT
         public IActionResult Checkout()

@@ -15,25 +15,21 @@ namespace ExclusiveMVC.Controllers
             _context = context;
         }
 
-        // 🔥 REDIRECT CHECKOUT TO CART (FIXED ISSUE)
+        // 🔁 Redirect Order/Checkout → Cart/Checkout
         public IActionResult Checkout()
         {
             return RedirectToAction("Checkout", "Cart");
         }
 
-        // ✅ PLACE ORDER
+        // ✅ PLACE ORDER (FINAL FIXED VERSION)
         [HttpPost]
-        public IActionResult PlaceOrder(IFormCollection form)
+        public IActionResult PlaceOrder(string name, string phone, string address,
+                                       string state, string city, string pincode)
         {
             try
             {
-                // 🔥 GET FORM DATA SAFELY
-                string name = form["name"].ToString();
-                string phone = form["phone"].ToString();
-                string address = form["address"].ToString();
-                string state = form["state"].ToString();
-                string city = form["city"].ToString();
-                string pincode = form["pincode"].ToString();
+                // 🧪 Debug log
+                Console.WriteLine($"DEBUG: {name} | {phone}");
 
                 // 🚫 VALIDATION
                 if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(phone))
@@ -42,7 +38,7 @@ namespace ExclusiveMVC.Controllers
                     return RedirectToAction("Checkout", "Cart");
                 }
 
-                // 🛒 GET ACTIVE CART ITEMS
+                // 🛒 Get active cart items
                 var cartItems = _context.Cart
                     .Where(x => !x.IsSaved)
                     .ToList();
@@ -53,25 +49,22 @@ namespace ExclusiveMVC.Controllers
                     return RedirectToAction("Index", "Cart");
                 }
 
-                // 💰 CALCULATE TOTAL
+                // 💰 Calculate total
                 decimal total = cartItems.Sum(x => x.Price * x.Quantity);
 
-                // 📍 FULL ADDRESS
-                string fullAddress = $"{address}, {city}, {state} - {pincode}";
-
-                // 📦 CREATE ORDER
+                // 📦 Create order (FIXED: Name)
                 var order = new Order
                 {
-                    CustomerName = name,
+                    Name = name,
                     Phone = phone,
-                    Address = fullAddress,
+                    Address = $"{address}, {city}, {state} - {pincode}",
                     TotalAmount = total,
                     Status = "Placed",
                     OrderDate = DateTime.Now,
                     Items = new List<OrderItem>()
                 };
 
-                // 📋 ADD ORDER ITEMS
+                // 📋 Add items
                 foreach (var item in cartItems)
                 {
                     order.Items.Add(new OrderItem
@@ -82,23 +75,26 @@ namespace ExclusiveMVC.Controllers
                     });
                 }
 
-                // 💾 SAVE ORDER
+                // 💾 Save order
                 _context.Orders.Add(order);
 
-                // 🧹 CLEAR CART
+                // 🧹 Clear cart
                 _context.Cart.RemoveRange(cartItems);
 
                 _context.SaveChanges();
 
-                // 🔄 RESET CART COUNT
+                // 🔄 Reset cart count
                 HttpContext.Session.SetInt32("CartCount", 0);
 
                 TempData["success"] = "Order placed successfully!";
 
+                // ✅ Redirect to history
                 return RedirectToAction("History");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("ERROR: " + ex.Message);
+
                 TempData["error"] = "Something went wrong!";
                 return RedirectToAction("Checkout", "Cart");
             }
@@ -174,12 +170,12 @@ namespace ExclusiveMVC.Controllers
 
         // 🧾 INVOICE
         public IActionResult Invoice(int id)
-        {
-            var order = _context.Orders
-                .Include(o => o.Items)
-                .FirstOrDefault(o => o.Id == id);
+       {
+        var order = _context.Orders
+        .Include(o => o.Items)
+        .FirstOrDefault(o => o.Id == id);
 
-            return View(order);
+        return View(order);
         }
     }
 }

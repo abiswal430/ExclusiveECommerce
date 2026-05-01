@@ -27,7 +27,7 @@ namespace ExclusiveMVC.Migrations
                 oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<string>(
-                name: "CustomerName",
+                name: "Name",
                 table: "Orders",
                 type: "nvarchar(max)",
                 nullable: true,
@@ -97,7 +97,7 @@ namespace ExclusiveMVC.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "CustomerName",
+                name: "Name",
                 table: "Orders",
                 type: "nvarchar(max)",
                 nullable: false,

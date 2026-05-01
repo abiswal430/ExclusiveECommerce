@@ -1,0 +1,121 @@
+@model ExclusiveMVC.Models.Order
+
+<div class="invoice-container">
+
+    <!-- HEADER -->
+    <div class="invoice-header">
+        <h2>🧾 Invoice</h2>
+        <p><b>Order ID:</b> @Model.Id</p>
+        <p><b>Date:</b> @Model.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</p>
+    </div>
+
+    <hr />
+
+    <!-- CUSTOMER DETAILS -->
+    <div class="customer-details">
+        <p><b>Name:</b> @Model.Name</p>
+        <p><b>Phone:</b> @Model.Phone</p>
+        <p><b>Address:</b> @Model.Address</p>
+    </div>
+
+    <hr />
+
+    <!-- ITEMS TABLE -->
+    <h4>🛒 Order Items</h4>
+
+    <table class="table table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Price (₹)</th>
+                <th>Qty</th>
+                <th>Total (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>@(item.Price * item.Quantity)</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No items found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+
+    <!-- TOTAL -->
+    <div class="text-end">
+        <h3 class="text-success">
+            Total Amount: ₹ @Model.TotalAmount
+        </h3>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="text-center mt-4 no-print">
+        <button onclick="window.print()" class="btn btn-primary">
+            🖨 Print Invoice
+        </button>
+
+        <a href="/Order/History" class="btn btn-secondary">
+            ⬅ Back to Orders
+        </a>
+    </div>
+
+</div>
+
+<!-- 🎨 STYLE -->
+<style>
+.invoice-container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.invoice-header {
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+}
+
+h2 {
+    color: #2874f0;
+    font-weight: bold;
+}
+
+.text-success {
+    font-weight: bold;
+}
+
+/* ✅ FIXED HERE */
+@@media print {
+    .no-print {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .invoice-container {
+        box-shadow: none;
+        border: none;
+    }
+}
+</style>

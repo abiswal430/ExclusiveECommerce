@@ -13,20 +13,35 @@ namespace ExclusiveMVC.Controllers
             _httpClient = new HttpClient();
         }
 
+        // 🌐 FETCH PRODUCTS FROM FAKESTORE API
         public async Task<IActionResult> Products()
         {
-            var response = await _httpClient.GetAsync("https://fakestoreapi.com/products");
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
+                var response = await _httpClient.GetAsync("https://fakestoreapi.com/products");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return View(new List<ApiProduct>());
+                }
+
+                var data = await response.Content.ReadAsStringAsync();
+
+                var products = JsonSerializer.Deserialize<List<ApiProduct>>(data,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                return View(products ?? new List<ApiProduct>());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                // Prevent crash
                 return View(new List<ApiProduct>());
             }
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            var products = JsonSerializer.Deserialize<List<ApiProduct>>(json);
-
-            return View(products);
         }
     }
 }

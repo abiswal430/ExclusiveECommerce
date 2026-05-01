@@ -18,7 +18,7 @@ namespace ExclusiveMVC.Migrations
             migrationBuilder.RenameColumn(
                 name: "Status",
                 table: "Orders",
-                newName: "CustomerName");
+                newName: "Name");
 
             migrationBuilder.RenameColumn(
                 name: "ProductName",
@@ -45,7 +45,7 @@ namespace ExclusiveMVC.Migrations
                 newName: "UserEmail");
 
             migrationBuilder.RenameColumn(
-                name: "CustomerName",
+                name: "Name",
                 table: "Orders",
                 newName: "Status");
 
