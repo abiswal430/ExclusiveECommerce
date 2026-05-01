@@ -2,11 +2,28 @@
     ViewData["Title"] = "Login";
 }
 
+<!-- ✅ SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["success"] != null)
+{
+    <script>
+        Swal.fire("Success", "@TempData["success"]", "success");
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <script>
+        Swal.fire("Error", "@TempData["error"]", "error");
+    </script>
+}
+
 <div class="d-flex justify-content-center align-items-center" style="height:70vh;">
 
-    <div class="card shadow p-4" style="width:350px;">
+    <div class="card shadow p-4" style="width:350px; border-radius:12px;">
 
-        <h3 class="text-center mb-3">Login</h3>
+        <h3 class="text-center mb-3">🔐 Login</h3>
 
         <form method="post">
 
@@ -22,14 +39,7 @@
                Login
             </button>
 
-
         </form>
-
-        <!-- ERROR MESSAGE -->
-        @if (ViewBag.Error != null)
-        {
-            <p class="text-danger text-center mt-2">@ViewBag.Error</p>
-        }
 
         <!-- REGISTER LINK -->
         <div class="text-center mt-3">
@@ -39,3 +49,23 @@
     </div>
 
 </div>
+
+<!-- 🎨 STYLE -->
+<style>
+.card {
+    border-radius: 12px;
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+</style>

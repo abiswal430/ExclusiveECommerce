@@ -15,48 +15,80 @@ namespace ExclusiveMVC.Controllers
             _context = context;
         }
 
-        // REGISTER PAGE
+        // ✅ REGISTER PAGE (GET)
         public IActionResult Register()
         {
             return View();
         }
 
+        // ✅ REGISTER (POST)
         [HttpPost]
         public IActionResult Register(User user)
         {
-          _context.Users.Add(user);
-          _context.SaveChanges();
+            try
+            {
+                if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+                {
+                    TempData["error"] = "All fields are required!";
+                    return View(user);
+                }
 
-          return RedirectToAction("Login", "Account");
+                // 🔥 Check if user already exists
+                var exists = _context.Users.FirstOrDefault(x => x.Username == user.Username);
+
+                if (exists != null)
+                {
+                    TempData["error"] = "Username already exists!";
+                    return View(user);
+                }
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // ✅ SUCCESS MESSAGE
+                TempData["success"] = "Registration successful!";
+
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                TempData["error"] = "Registration failed!";
+                return View(user);
+            }
         }
 
-        // LOGIN PAGE
+        // ✅ LOGIN PAGE
         public IActionResult Login()
         {
             return View();
         }
 
+        // ✅ LOGIN POST
         [HttpPost]
-public IActionResult Login(string username, string password)
-{
-    var user = _context.Users
-        .FirstOrDefault(u => u.Username == username && u.Password == password);
+        public IActionResult Login(string username, string password)
+        {
+            var user = _context.Users
+                .FirstOrDefault(u => u.Username == username && u.Password == password);
 
-    if (user != null)
-    {
-        HttpContext.Session.SetString("username", user.Username);
+            if (user != null)
+            {
+                HttpContext.Session.SetString("username", user.Username);
 
-        return RedirectToAction("Index", "Home"); // ✅ FIX
-    }
+                TempData["success"] = "Login successful!";
 
-    ViewBag.Error = "Invalid Username or Password";
-    return View();
-}
+                return RedirectToAction("Index", "Home");
+            }
 
-        // LOGOUT
+            TempData["error"] = "Invalid Username or Password";
+            return View();
+        }
+
+        // ✅ LOGOUT
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            TempData["success"] = "Logged out successfully!";
             return RedirectToAction("Login");
         }
     }
