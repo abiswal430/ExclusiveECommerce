@@ -2,30 +2,50 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="d-flex justify-content-center align-items-center" style="height:70vh;">
+<!-- ✅ SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <div class="card shadow p-4" style="width:350px;">
+@if (TempData["success"] != null)
+{
+    <script>
+        Swal.fire("Success", "@TempData["success"]", "success");
+    </script>
+}
 
-        <h3 class="text-center mb-3">Register</h3>
+@if (TempData["error"] != null)
+{
+    <script>
+        Swal.fire("Error", "@TempData["error"]", "error");
+    </script>
+}
+
+<div class="d-flex justify-content-center align-items-center" style="height:80vh;">
+
+    <div class="card shadow p-4" style="width:360px; border-radius:12px;">
+
+        <h3 class="text-center mb-3">📝 Register</h3>
 
         <form method="post">
 
             <div class="mb-3">
-                <input name="Username" class="form-control" placeholder="Username" required />
+                <input name="Username" class="form-control"
+                       placeholder="Username" required />
             </div>
 
             <div class="mb-3">
-                <input name="Password" type="password" class="form-control" placeholder="Password" required />
+                <input name="Password" type="password"
+                       class="form-control"
+                       placeholder="Password" required />
             </div>
 
-            <button type="submit" class="btn w-100 py-2"
-            style="background:#0d6efd; color:white; border-radius:8px; font-weight:600;">
-            Register
+            <button type="submit"
+                    class="btn btn-primary w-100 fw-bold">
+                Register
             </button>
-
 
         </form>
 
+        <!-- LOGIN LINK -->
         <div class="text-center mt-3">
             <a href="/Account/Login">Already have account? Login</a>
         </div>
@@ -33,3 +53,24 @@
     </div>
 
 </div>
+
+<!-- 🎨 STYLE -->
+<style>
+.card {
+    border-radius: 12px;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.btn {
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+</style>

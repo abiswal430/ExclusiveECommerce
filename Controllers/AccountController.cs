@@ -15,56 +15,55 @@ namespace ExclusiveMVC.Controllers
             _context = context;
         }
 
-        // ✅ REGISTER PAGE (GET)
+        // ================= REGISTER =================
         public IActionResult Register()
         {
             return View();
         }
 
-        // ✅ REGISTER (POST)
         [HttpPost]
         public IActionResult Register(User user)
         {
             try
             {
+                // ✅ Validation
                 if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
                 {
                     TempData["error"] = "All fields are required!";
-                    return View(user);
+                    return RedirectToAction("Register"); // 🔥 FIX
                 }
 
-                // 🔥 Check if user already exists
-                var exists = _context.Users.FirstOrDefault(x => x.Username == user.Username);
+                // ✅ Check duplicate user
+                var exists = _context.Users
+                    .FirstOrDefault(x => x.Username == user.Username);
 
                 if (exists != null)
                 {
                     TempData["error"] = "Username already exists!";
-                    return View(user);
+                    return RedirectToAction("Register"); // 🔥 FIX
                 }
 
+                // ✅ Save user
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
-                // ✅ SUCCESS MESSAGE
                 TempData["success"] = "Registration successful!";
-
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login"); // ✅ SUCCESS FLOW
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 TempData["error"] = "Registration failed!";
-                return View(user);
+                return RedirectToAction("Register"); // 🔥 FIX
             }
         }
 
-        // ✅ LOGIN PAGE
+        // ================= LOGIN =================
         public IActionResult Login()
         {
             return View();
         }
 
-        // ✅ LOGIN POST
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
@@ -76,15 +75,14 @@ namespace ExclusiveMVC.Controllers
                 HttpContext.Session.SetString("username", user.Username);
 
                 TempData["success"] = "Login successful!";
-
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); // ✅ SUCCESS
             }
 
             TempData["error"] = "Invalid Username or Password";
-            return View();
+            return RedirectToAction("Login"); // 🔥 FIX
         }
 
-        // ✅ LOGOUT
+        // ================= LOGOUT =================
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
