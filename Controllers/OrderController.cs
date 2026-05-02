@@ -15,30 +15,25 @@ namespace ExclusiveMVC.Controllers
             _context = context;
         }
 
-        // 🔁 Redirect Order/Checkout → Cart/Checkout
+        // 🔁 Redirect
         public IActionResult Checkout()
         {
             return RedirectToAction("Checkout", "Cart");
         }
 
-        // ✅ PLACE ORDER (FINAL FIXED VERSION)
+        // ✅ PLACE ORDER (FIXED)
         [HttpPost]
         public IActionResult PlaceOrder(string name, string phone, string address,
                                        string state, string city, string pincode, string paymentMethod)
         {
             try
             {
-                // 🧪 Debug log
-                Console.WriteLine($"DEBUG: {name} | {phone}");
-
-                // 🚫 VALIDATION
                 if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(phone))
                 {
                     TempData["error"] = "Name and Phone are required!";
                     return RedirectToAction("Checkout", "Cart");
                 }
 
-                // 🛒 Get active cart items
                 var cartItems = _context.Cart
                     .Where(x => !x.IsSaved)
                     .ToList();
@@ -49,22 +44,26 @@ namespace ExclusiveMVC.Controllers
                     return RedirectToAction("Index", "Cart");
                 }
 
-                // 💰 Calculate total
                 decimal total = cartItems.Sum(x => x.Price * x.Quantity);
 
-                // 📦 Create order (FIXED: Name)
+                // ✅ FIXED ORDER CREATION
                 var order = new Order
                 {
                     Name = name,
                     Phone = phone,
                     Address = $"{address}, {city}, {state} - {pincode}",
                     TotalAmount = total,
-                    Status = paymentMethod == "COD" ? "Order Placed (COD)" : "Paid",
+
+                    // 🔥 IMPORTANT FIX
+                    Status = "Placed",
+
+                    // ✅ store payment method separately
+                    PaymentMethod = paymentMethod,
+
                     OrderDate = DateTime.Now,
                     Items = new List<OrderItem>()
                 };
 
-                // 📋 Add items
                 foreach (var item in cartItems)
                 {
                     order.Items.Add(new OrderItem
@@ -75,32 +74,25 @@ namespace ExclusiveMVC.Controllers
                     });
                 }
 
-                // 💾 Save order
                 _context.Orders.Add(order);
-
-                // 🧹 Clear cart
                 _context.Cart.RemoveRange(cartItems);
 
                 _context.SaveChanges();
 
-                // 🔄 Reset cart count
                 HttpContext.Session.SetInt32("CartCount", 0);
 
                 TempData["success"] = "Order placed successfully!";
-
-                // ✅ Redirect to history
                 return RedirectToAction("History");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
-
                 TempData["error"] = "Something went wrong!";
                 return RedirectToAction("Checkout", "Cart");
             }
         }
 
-        // 📜 ORDER HISTORY
+        // 📜 HISTORY
         public IActionResult History()
         {
             var orders = _context.Orders
@@ -111,7 +103,7 @@ namespace ExclusiveMVC.Controllers
             return View(orders);
         }
 
-        // ❌ CANCEL ORDER
+        // ❌ CANCEL
         public IActionResult Cancel(int id)
         {
             var order = _context.Orders.FirstOrDefault(x => x.Id == id);
@@ -130,7 +122,7 @@ namespace ExclusiveMVC.Controllers
             return RedirectToAction("History");
         }
 
-        // 🚚 MARK AS SHIPPED
+        // 🚚 SHIPPED
         public IActionResult MarkShipped(int id)
         {
             var order = _context.Orders.FirstOrDefault(x => x.Id == id);
@@ -149,7 +141,7 @@ namespace ExclusiveMVC.Controllers
             return RedirectToAction("History");
         }
 
-        // 🚚 MARK AS DELIVERED
+        // 📦 DELIVERED
         public IActionResult MarkDelivered(int id)
         {
             var order = _context.Orders.FirstOrDefault(x => x.Id == id);
@@ -170,12 +162,12 @@ namespace ExclusiveMVC.Controllers
 
         // 🧾 INVOICE
         public IActionResult Invoice(int id)
-       {
-        var order = _context.Orders
-        .Include(o => o.Items)
-        .FirstOrDefault(o => o.Id == id);
+        {
+            var order = _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefault(o => o.Id == id);
 
-        return View(order);
+            return View(order);
         }
     }
 }
