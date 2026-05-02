@@ -1,78 +1,93 @@
 @model List<ExclusiveMVC.Models.Cart>
 
-<h2 class="mb-4">🛒 My Cart (@Model.Sum(x => x.Quantity))</h2>
+@{
+    var cart = Model ?? new List<ExclusiveMVC.Models.Cart>();
+    var totalQty = cart.Sum(x => x.Quantity);
+    var totalPrice = cart.Sum(x => x.Price * x.Quantity);
+}
+
+<h2 class="mb-4">My Cart (@totalQty)</h2>
 
 <div class="row">
 
     <!-- LEFT SIDE -->
     <div class="col-md-8">
 
-        @foreach (var item in Model)
+        @if (cart.Any())
         {
-            <div class="card mb-3 p-3 shadow-sm">
+            @foreach (var item in cart)
+            {
+                <div class="card mb-3 p-3 shadow-sm">
+                    <div class="row">
 
-                <div class="row">
-
-                    <!-- IMAGE -->
-                    <div class="col-md-3 text-center">
-                        <img src="@item.ImageUrl" height="120" style="object-fit:contain;" />
-                    </div>
-
-                    <!-- DETAILS -->
-                    <div class="col-md-6">
-                        <h5>@item.Name</h5>
-
-                        <!-- ⭐ QUANTITY DROPDOWN -->
-                        <div class="mt-2">
-                            Qty:
-                            <select onchange="updateQty(@item.Id, this.value)" class="form-select w-auto d-inline">
-                                @for (int i = 1; i <= 5; i++)
-                                {
-                                    <option value="@i" selected="@(item.Quantity == i)">
-                                        @i
-                                    </option>
-                                }
-                            </select>
+                        <!-- IMAGE -->
+                        <div class="col-md-3 text-center">
+                            <img src="@item.ImageUrl" height="120" style="object-fit:contain;" />
                         </div>
 
-                        <h6 class="text-success mt-2">
-                            ₹ @(item.Price * item.Quantity)
-                        </h6>
+                        <!-- DETAILS -->
+                        <div class="col-md-6">
+                            <h5>@item.Name</h5>
 
-                        <small class="text-muted">Delivery in 2-3 days 🚚</small>
+                            <!-- QUANTITY -->
+                            <div class="mt-2">
+                                Qty:
+                                <select class="form-select w-auto d-inline"
+                                        onchange="updateQty(@item.Id, this.value)">
+
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        if (item.Quantity == i)
+                                        {
+                                            <option value="@i" selected>@i</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <h6 class="text-success mt-2">
+                                ₹ @(item.Price * item.Quantity)
+                            </h6>
+
+                            <small class="text-muted">Delivery in 2-3 days</small>
+                        </div>
+
+                        <!-- ACTION -->
+                        <div class="col-md-3 text-end">
+                            <a href="/Cart/Remove/@item.Id"
+                               class="btn btn-outline-danger btn-sm mb-2">
+                                Remove
+                            </a>
+
+                            <br />
+
+                            <a href="/Cart/SaveForLater/@item.Id"
+                               class="btn btn-outline-secondary btn-sm">
+                                Save for later
+                            </a>
+                        </div>
+
                     </div>
-
-                    <!-- ACTION -->
-                    <div class="col-md-3 text-end">
-
-                        <a href="/Cart/Remove/@item.Id"
-                           class="btn btn-outline-danger btn-sm mb-2">
-                            Remove
-                        </a>
-
-                        <br />
-
-                        <a href="/Cart/SaveForLater/@item.Id"
-                           class="btn btn-outline-secondary btn-sm">
-                            Save for later
-                        </a>
-
-                    </div>
-
                 </div>
-
-            </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info">Your cart is empty.</div>
         }
 
-        <!-- 🔥 SAVE FOR LATER SECTION -->
-        @if (ViewBag.SavedItems != null)
+        <!-- SAVE FOR LATER -->
+        @if (ViewBag.SavedItems != null && ((List<ExclusiveMVC.Models.Cart>)ViewBag.SavedItems).Any())
         {
-            <h4 class="mt-4">💾 Saved for Later</h4>
+            <h4 class="mt-4">Saved for Later</h4>
 
-            foreach (var item in ViewBag.SavedItems)
+            @foreach (var item in (List<ExclusiveMVC.Models.Cart>)ViewBag.SavedItems)
             {
                 <div class="card mb-2 p-3">
-
                     <div class="row align-items-center">
 
                         <div class="col-md-3">
@@ -92,7 +107,6 @@
                         </div>
 
                     </div>
-
                 </div>
             }
         }
@@ -108,9 +122,9 @@
             <hr />
 
             <p>
-                Price (@Model.Sum(x => x.Quantity) items)
+                Price (@totalQty items)
                 <span class="float-end">
-                    ₹ @Model.Sum(x => x.Price * x.Quantity)
+                    ₹ @totalPrice
                 </span>
             </p>
 
@@ -133,15 +147,15 @@
             <h5>
                 Total Amount
                 <span class="float-end text-success">
-                    ₹ @(Model.Sum(x => x.Price * x.Quantity) - 500)
+                    ₹ @(totalPrice - 500)
                 </span>
             </h5>
 
             <p class="text-success mt-2">
-                🎉 You saved ₹500 on this order!
+                You saved ₹500 on this order!
             </p>
 
-            <a href="/Order/Checkout" class="btn btn-warning w-100 mt-3">
+            <a href="/Cart/Checkout" class="btn btn-warning w-100 mt-3">
                 Place Order
             </a>
 
@@ -151,14 +165,21 @@
 
 </div>
 
-<!-- 🔥 SCRIPT -->
+<!-- SCRIPT -->
 <script>
     function updateQty(id, qty) {
+        qty = parseInt(qty);
+
+        if (!qty || qty < 1) {
+            alert("Invalid quantity");
+            return;
+        }
+
         window.location.href = "/Cart/UpdateQty?id=" + id + "&qty=" + qty;
     }
 </script>
 
-<!-- 🎨 STYLE -->
+<!-- STYLE -->
 <style>
     .card {
         border-radius: 12px;

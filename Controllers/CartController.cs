@@ -116,22 +116,33 @@ namespace ExclusiveMVC.Controllers
             return RedirectToAction("Index");
         }
 
-        // 🔄 UPDATE QUANTITY
-        [HttpPost]
+       // 🔄 UPDATE QUANTITY (FIXED)
         public IActionResult UpdateQty(int id, int qty)
         {
-            var item = _context.Cart
-                .FirstOrDefault(x => x.Id == id && !x.IsSaved);
+            try
+        {
+         var item = _context.Cart
+            .FirstOrDefault(x => x.Id == id && !x.IsSaved);
 
-            if (item != null && qty > 0)
-            {
-                item.Quantity = qty;
-                _context.SaveChanges();
-            }
-
-            UpdateCartCount();
-            return RedirectToAction("Index");
+         if (item != null && qty > 0)
+        {
+            item.Quantity = qty;
+            _context.SaveChanges();
         }
+
+        UpdateCartCount();
+
+        return RedirectToAction("Index");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+
+        TempData["error"] = "Something went wrong while updating quantity!";
+
+        return RedirectToAction("Index");
+    }
+}
 
         // 💾 SAVE FOR LATER
         public IActionResult SaveForLater(int id)
