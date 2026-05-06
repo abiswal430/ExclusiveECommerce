@@ -2,26 +2,43 @@
     ViewData["Title"] = "Contact";
 }
 
-<h2>Contact Us</h2>
+<!-- ✅ SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-@if (ViewBag.Message != null)
+<!-- ✅ SUCCESS POPUP -->
+@if (TempData["success"] != null)
 {
     <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: '@ViewBag.Message'
-        });
+        Swal.fire("Success", "@TempData["success"]", "success");
     </script>
 }
 
-<form method="post" action="/Home/Contact">
+<!-- ❌ ERROR POPUP -->
+@if (TempData["error"] != null)
+{
+    <script>
+        Swal.fire("Error", "@TempData["error"]", "error");
+    </script>
+}
 
-    <input name="name" class="form-control mb-2" placeholder="Your Name" required />
-    <input name="email" class="form-control mb-2" placeholder="Email" required />
-    
-    <textarea name="message" class="form-control mb-2" placeholder="Message" required></textarea>
+<h2>Contact Us</h2>
 
-    <button type="submit" class="btn btn-dark">Send</button>
+<form method="post" asp-action="Contact" asp-controller="Home">
+
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Your Name" required />
+    </div>
+
+    <div class="mb-3">
+        <input type="email" name="email" class="form-control" placeholder="Email" required />
+    </div>
+
+    <div class="mb-3">
+        <textarea name="message" class="form-control" placeholder="Message" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-dark">
+        Send
+    </button>
 
 </form>

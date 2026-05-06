@@ -64,17 +64,20 @@ public class HomeController : Controller
     public IActionResult Contact(string name, string email, string message)
     {
         try
-        {
-            ViewBag.Message = "Message sent successfully! ✅";
-        }
-        catch (Exception)
-        {
-            ViewBag.Message = "Something went wrong!";
-        }
+    {
+        // You can store in DB later if needed
 
-        return View();
+        // ✅ SUCCESS MESSAGE
+        TempData["success"] = "Message sent successfully!";
+
+        return RedirectToAction("Contact");
     }
-
+    catch
+    {
+        TempData["error"] = "Failed to send message!";
+        return RedirectToAction("Contact");
+    }
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
