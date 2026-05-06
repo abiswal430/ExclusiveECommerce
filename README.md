@@ -1,109 +1,257 @@
-### Exclusive E-Commerce Website:-
+# Exclusive E-Commerce Website
 
-This project is a full-stack web application developed using ASP.NET Core MVC. It simulates a basic e-commerce platform where users can browse products, manage a cart, place orders, and track order history. The application also includes an admin panel for managing products and orders.
+## Overview
+
+Exclusive E-Commerce Website is a full-stack web application developed using ASP.NET Core MVC. The project demonstrates the implementation of an online shopping platform where users can browse products, manage a shopping cart, place orders, and track their purchase history.
+
+The system also includes API integration, database connectivity, authentication, invoice generation, and an admin module for managing products and orders.
+
+This project was developed for academic and learning purposes to understand real-world web application development using ASP.NET technologies.
 
 ---
 
-### Features:-
+# Key Features
 
-### User Module:-
-- User registration and login functionality
-- Session-based authentication
-- Display success and error messages using SweetAlert
-- Browse products from database and external API
+## User Authentication
+
+- User Registration
+- User Login and Logout
+- Session-Based Authentication
+- Success and Error Notifications using SweetAlert
+
+---
+
+## Product Management
+
+- Display products from SQL Server database
+- Fetch products dynamically using FakeStore API
+- Product image display
+- Product price display
+- Responsive product cards
+
+---
+
+## Shopping Cart System
+
 - Add products to cart
-- Update product quantity in cart
 - Remove products from cart
-- Checkout system with billing details
+- Update product quantity
+- Save products for later
+- Dynamic total price calculation
 
-### Payment Methods:-
-- Card payment
-- UPI payment
-- Net banking
-- Cash on Delivery (COD)
+---
 
-### Order Management:-
+## Checkout and Payment
+
+- Checkout page with billing details
+- Multiple payment options:
+  - Card Payment
+  - UPI Payment
+  - Net Banking
+  - Cash on Delivery (COD)
+
+---
+
+## Order Management
+
 - Place orders successfully
 - View order history
-- Order status tracking:
+- Track order status:
   - Placed
   - Shipped
   - Delivered
   - Cancelled
-- Invoice generation with print option
+- Download and print invoice
 
 ---
 
-## API Integration:-
+## Contact Module
 
-The application integrates with the FakeStore API to fetch product data dynamically. These products can also be added to the cart and used within the application.
+- Contact form with validation
+- Save contact messages into SQL Server database
+- Success and error popup notifications
 
 ---
 
-## Admin Module:-
+## Admin Module
 
-- View all orders
+- View all customer orders
 - Update order status
-- Manage product listings
+- Manage products
+- Monitor application data
 
 ---
 
-## Technologies Used:-
+# API Integration
 
+The project integrates with the FakeStore API to fetch external product data dynamically.
+
+API Features:
+- Fetch product list using HttpClient
+- Deserialize JSON response
+- Display API products inside the application
+- Add API products directly to cart
+
+---
+
+# Technologies Used
+
+## Frontend
+- HTML5
+- CSS3
+- Bootstrap 5
+- JavaScript
+- jQuery
+
+## Backend
 - ASP.NET Core MVC
+- C#
+
+## Database
+- SQL Server
 - Entity Framework Core
-- SQL Server (SSMS)
-- Bootstrap
-- JavaScript and jQuery
+
+## External Libraries
 - SweetAlert2
+- Newtonsoft.Json
+
+## API
 - FakeStore API
 
 ---
 
-## Project Structure:-
-Controllers/
-AccountController.cs
-CartController.cs
-OrderController.cs
-ApiController.cs
+# Project Architecture
 
-Models/
-User.cs
-Product.cs
-Cart.cs
-Order.cs
+The application follows the MVC (Model-View-Controller) architecture.
 
-Views/
-Account/
-Cart/
-Order/
-Api/
+## Controllers
+Handles application logic and user requests.
 
-Data/
-AppDbContext.cs
+- HomeController
+- AccountController
+- CartController
+- OrderController
+- ApiController
 
-### Security:-
+## Models
+Represents database entities and application data.
 
-Basic authentication has been implemented. Passwords are stored in plain text for demonstration purposes. This can be improved by implementing password hashing.
+- User.cs
+- Product.cs
+- Cart.cs
+- Order.cs
+- ContactMessage.cs
+
+## Views
+Contains Razor UI pages.
+
+- Account
+- Cart
+- Order
+- Api
+- Home
+
+## Data
+Handles database connectivity.
+
+- AppDbContext.cs
 
 ---
 
-### Future Enhancements:-
+# Database Tables
 
-- Password encryption and hashing
+The project uses the following tables:
+
+- Users
+- Products
+- Cart
+- Orders
+- OrderItems
+- ContactMessages
+
+---
+
+# Security
+
+Basic authentication has been implemented using sessions.
+
+Current implementation stores passwords in plain text for demonstration purposes. In a production environment, password hashing and encryption should be implemented for better security.
+
+---
+
+# Future Improvements
+
+The project can be enhanced further with:
+
+- Password hashing and encryption
 - Email verification
-- Payment gateway integration (Razorpay or Stripe)
-- Improved UI and responsiveness
-- Role-based authentication (Admin/User)
+- Razorpay or Stripe payment gateway integration
+- JWT authentication
+- Role-based authorization
+- Product search and filtering
+- Wishlist functionality
+- Advanced admin analytics
+- Mobile responsive optimization
 
 ---
 
-### Author:-
+# How to Run the Project
+
+## Step 1
+Clone the repository.
+
+```bash
+git clone <repository-url>
+```
+
+## Step 2
+Open the project in Visual Studio.
+
+## Step 3
+Update the SQL Server connection string in:
+
+```bash
+appsettings.json
+```
+
+## Step 4
+Run database migrations.
+
+```bash
+dotnet ef database update
+```
+
+## Step 5
+Run the application.
+
+```bash
+dotnet run
+```
+
+---
+
+# Learning Outcomes
+
+This project helped in understanding:
+
+- ASP.NET Core MVC architecture
+- Entity Framework Core
+- SQL Server integration
+- REST API integration
+- Session management
+- CRUD operations
+- Shopping cart functionality
+- Order processing system
+- GitHub version control
+
+---
+
+# Author
 
 Arjya Biswal
 
 ---
 
-### Note:-
+# Academic Note
 
-This project is developed for academic purposes and demonstrates the core concepts of ASP.NET Core MVC, database integration, API usage, and web application development.
+This project was developed as part of academic coursework for Web Application Development using ASP.NET and demonstrates practical implementation of modern web application development concepts.

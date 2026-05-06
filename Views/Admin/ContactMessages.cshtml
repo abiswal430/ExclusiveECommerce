@@ -1,0 +1,26 @@
+@model List<ExclusiveMVC.Models.ContactMessage>
+
+<h2>Contact Messages</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Email</td>
+            <td>@item.Message</td>
+            <td>@item.CreatedAt</td>
+        </tr>
+    }
+    </tbody>
+</table>

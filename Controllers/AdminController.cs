@@ -63,5 +63,15 @@ namespace ExclusiveMVC.Controllers
             var orders = _context.Orders.ToList();
             return View(orders);
         }
+
+        // View Contact Messages
+        public IActionResult ContactMessages()
+        {
+            var messages = _context.ContactMessages
+            .OrderByDescending(x => x.CreatedAt)
+            .ToList();
+
+            return View(messages);
+        }
     }
 }
